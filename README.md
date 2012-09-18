@@ -8,14 +8,14 @@ Requirements
 -------------
 
 Werkzeug >= 0.8.3  
-opencv >= 2.4.2
+opencv >= 2.1
 
 (may work with previous versions, but not tested)
 
 Startup
 --------
 
-python facedetect.py --localhost --port=4000 --opencv=/home/user/OpenCV-2.4.2
+python facedetect.py --host=localhost --port=4000
 
 Usage
 ------
