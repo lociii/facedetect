@@ -12,10 +12,14 @@ opencv >= 2.1
 
 (may work with previous versions, but not tested)
 
-Startup
---------
+HowTo (Debian)
+---------------
 
-python facedetect.py --host=localhost --port=4000
+git clone git://github.com/lociii/facedetect.git  
+cd facedetect  
+pip install -r requirements.txt  
+aptitude install libcv2.1 python-opencv  
+python facedetect.py --host=0.0.0.0 --port=4000
 
 Usage
 ------
