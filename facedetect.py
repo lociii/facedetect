@@ -14,7 +14,7 @@ haar_scale = 1.2
 min_neighbors = 2
 haar_flags = 0
 opencv_dir = ""
-cascade_xml = "data/haarcascades/haarcascade_frontalface_alt2.xml"
+cascade_xml = "haarcascade_frontalface_alt2.xml"
 
 @Request.application
 def application(request):
@@ -76,9 +76,10 @@ def detect(img):
 
 	faces = []
 	try:
-		cascade = cv.Load(opencv_dir + cascade_xml)
+		path = os.path.normpath(os.path.dirname(os.path.realpath(__file__))) + os.sep
+		cascade = cv.Load(path + cascade_xml)
 	except TypeError:
-		raise InternalServerError('Cascade not found in opencv source: ' + cascade_xml)
+		raise InternalServerError('XML definition not found')
 
 	while len(faces) == 0 and angle <= 360:
 		# rotate image
@@ -171,13 +172,6 @@ if __name__ == '__main__':
 		required=False,
 		default=4000,
 	)
-	parser.add_argument(
-		"--opencv",
-		dest="opencv",
-		help="OpenCV source base directory",
-		required=True,
-	)
 	args = parser.parse_args()
 
-	opencv_dir = os.path.normpath(args.opencv) + os.sep
 	run_simple(args.hostname, int(args.port), application)
