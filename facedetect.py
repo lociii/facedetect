@@ -38,7 +38,8 @@ def application(request):
 
         try:
             tempfile.file.write(data)
-            image = cv.LoadImage(tempfile.name, 1)
+            image = cv.LoadImage(tempfile.name,
+                                 iscolor=cv.CV_LOAD_IMAGE_GRAYSCALE)
         except Exception:
             raise BadRequest('No picture found on url')
 
@@ -57,10 +58,6 @@ def application(request):
 def detect(img):
     angle = 0
 
-    # convert color input image to grayscale
-    gray = cv.CreateImage((img.width, img.height), 8, 1)
-    cv.CvtColor(img, gray, cv.CV_BGR2GRAY)
-
     # scale input image for faster processing
     width = img.width
     height = img.height
@@ -74,8 +71,8 @@ def detect(img):
             height = max_size
             ratio = height / float(img.height)
             width = int(ratio * width)
-    img_small = cv.CreateImage((width, height), 8, 1)
-    cv.Resize(gray, img_small, cv.CV_INTER_LINEAR)
+    img_small = cv.CreateImage((width, height), cv.IPL_DEPTH_8U, 1)
+    cv.Resize(img, img_small, cv.CV_INTER_LINEAR)
 
     cv.EqualizeHist(img_small, img_small)
 
