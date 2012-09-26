@@ -90,7 +90,7 @@ def detect(img):
             img_small = rotateImage(img_small)
 
         faces = cv.HaarDetectObjects(
-            img_small, cascade, cv.CreateMemStorage(0), haar_scale,
+            img_small, cascade, cv.CreateMemStorage(), haar_scale,
             min_neighbors, haar_flags, min_size)
         if faces:
             for index, face in enumerate(faces):
