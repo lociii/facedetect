@@ -174,4 +174,4 @@ if __name__ == '__main__':
                         required=False, default=4000)
     args = parser.parse_args()
 
-    run_simple(args.hostname, int(args.port), application)
+    run_simple(args.hostname, int(args.port), application, use_reloader=True)
