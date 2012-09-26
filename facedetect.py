@@ -163,11 +163,12 @@ def calculatePosition(x, y, w, h, img_small, angle):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description="Face detection web service")
-    parser.add_argument("--hostname", dest="hostname",
+    parser.add_argument("--hostname", dest="hostname", type=str,
                         help="Hostname to bind service to", required=False,
                         default="localhost")
-    parser.add_argument("--port", dest="port", help="Port to bind service to",
-                        required=False, default=4000)
+    parser.add_argument("--port", dest="port", type=int,
+                        help="Port to bind service to", required=False,
+                        default=4000)
     args = parser.parse_args()
 
-    run_simple(args.hostname, int(args.port), application, use_reloader=True)
+    run_simple(args.hostname, args.port, application, use_reloader=True)
