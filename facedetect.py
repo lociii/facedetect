@@ -17,7 +17,6 @@ max_size = 300
 haar_scale = 1.2
 min_neighbors = 2
 haar_flags = 0
-opencv_dir = ""
 cascade_xml = "haarcascade_frontalface_alt2.xml"
 
 
