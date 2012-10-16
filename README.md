@@ -18,7 +18,7 @@ HowTo (Debian)
 git clone git://github.com/lociii/facedetect.git  
 cd facedetect  
 pip install -r requirements.txt  
-aptitude install libcv2.1 python-opencv  
+aptitude install libcv2.1 python-opencv python-imaging
 python facedetect.py --host=0.0.0.0 --port=4000
 
 Usage
