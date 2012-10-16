@@ -73,12 +73,11 @@ class Facedetect(object):
             raise BadRequest('No picture found on url')
 
     def detect_face(self):
-        angle = 0
-
         # scale input image for faster processing
         width = self.image.width
         height = self.image.height
         ratio = 1.0
+        img_small = self.image
         if width > max_size or height > max_size:
             if width > height:
                 width = max_size
@@ -88,31 +87,34 @@ class Facedetect(object):
                 height = max_size
                 ratio = height / float(self.image.height)
                 width = int(ratio * width)
-        img_small = cv.CreateImage((width, height), cv.IPL_DEPTH_8U, 1)
-        cv.Resize(self.image, img_small, cv.CV_INTER_LINEAR)
+            img_small = cv.CreateImage((width, height), cv.IPL_DEPTH_8U, 1)
+            cv.Resize(self.image, img_small, cv.CV_INTER_LINEAR)
 
         cv.EqualizeHist(img_small, img_small)
 
         faces = []
-
-        while len(faces) == 0 and angle <= 360:
+        angle = 0
+        while len(faces) == 0 and angle <= 270:
             # rotate image
             if angle > 0:
-                img_small = self.rotateImage(img_small)
+                cv.Transpose(img_small, img_small)
+                cv.Flip(img_small, flipMode=-1)
 
             faces = cv.HaarDetectObjects(
                 img_small, self.cascade, cv.CreateMemStorage(), haar_scale,
                 min_neighbors, haar_flags, min_size)
             if faces:
                 for index, face in enumerate(faces):
-                    ((x, y, w, h), n) = face
-                    faces[index] = self.calculatePosition(x, y, w, h, img_small, angle)
+                    rect, neigh = face
+                    faces[index] = self.calculatePosition(rect, img_small,
+                                                          angle)
             else:
                 angle += 90
 
         return faces
 
-    def calculatePosition(self, x, y, w, h, img_small, angle):
+    def calculatePosition(self, rect, img_small, angle):
+        x, y, w, h = rect
         img_width = float(img_small.width)
         img_height = float(img_small.height)
         if angle == 90 or angle == 270:
@@ -159,16 +161,6 @@ class Facedetect(object):
         h = int(h / img_height * 100)
 
         return x, y, w, h
-
-    def rotateImage(self, image):
-        # transposed image
-        timg = cv.CreateImage(
-            (image.height, image.width), image.depth, image.channels)
-
-        # rotate clockwise
-        cv.Transpose(image, timg)
-        cv.Flip(timg, timg, flipMode=1)
-        return timg
 
     def dispatch_request(self, request):
         adapter = self.url_map.bind_to_environ(request.environ)
