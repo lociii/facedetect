@@ -190,13 +190,13 @@ class Facedetect(object):
 
 
 def parse_args():
-    parser = ArgumentParser(description="Face detection web service")
-    parser.add_argument("--hostname", dest="hostname", type=str,
-                        help="Hostname to bind service to", required=False,
-                        default="localhost")
-    parser.add_argument("--port", dest="port", type=int,
-                        help="Port to bind service to", required=False,
-                        default=4000)
+    parser = ArgumentParser(description='Face detection web service')
+    parser.add_argument('--hostname', '-H', type=str, default='localhost',
+                        help='Hostname to bind service to')
+    parser.add_argument('--port', '-p', type=int, default=4000,
+                        help='Port to bind service to')
+    parser.add_argument('--debug', '-d', action='store_true',
+                        help='Enable debugging')
     return parser.parse_args()
 
 
@@ -211,4 +211,5 @@ if __name__ == '__main__':
         print "Cascade '%s' not found. Exiting!" % cascade_xml
         sys.exit(1)
 
-    run_simple(args.hostname, args.port, app, use_debugger=True, use_reloader=True)
+    run_simple(args.hostname, args.port, app, use_debugger=args.debug,
+               use_reloader=args.debug)
